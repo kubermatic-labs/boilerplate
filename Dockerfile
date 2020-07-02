@@ -20,5 +20,6 @@ RUN go build
 
 FROM alpine:3.12
 
+RUN apk add -U --no-cache make bash
 COPY --from=builder /app/boilerplate /usr/local/bin/
 ENTRYPOINT ["boilerplate"]
