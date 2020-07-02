@@ -20,5 +20,5 @@ RUN go build
 
 FROM alpine:3.12
 
-COPY --from=builder /app/boilerplate .
-ENTRYPOINT ["/boilerplate"]
+COPY --from=builder /app/boilerplate /usr/local/bin/
+ENTRYPOINT ["boilerplate"]
