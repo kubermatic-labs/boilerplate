@@ -12,22 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# See the OWNERS docs: https://git.k8s.io/community/contributors/guide/owners.md
+project_name: boilerplate
 
-approvers:
-  - kron4eg
-  - moadqassem
-  - moelsayed
-  - xmudrii
-  - xrstf
-  - youssefazrak
-  - thetechnick
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
 
-reviewers:
-  - kron4eg
-  - moadqassem
-  - moelsayed
-  - xmudrii
-  - xrstf
-  - youssefazrak
-  - thetechnick
+archives:
+  - id: boilerplate
+    format: zip
+    files:
+      - README.md
+      - LICENSE
+
+release:
+  prerelease: true
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ .Tag }}-snapshot"

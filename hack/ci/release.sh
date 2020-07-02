@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright 2020 The Kubermatic Kubernetes Platform contributors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# See the OWNERS docs: https://git.k8s.io/community/contributors/guide/owners.md
+# This script is creating release binaries via goreleaser. It's meant to
+# run in the Kubermatic CI environment only, as it requires GitHub
+# credentials.
 
-approvers:
-  - kron4eg
-  - moadqassem
-  - moelsayed
-  - xmudrii
-  - xrstf
-  - youssefazrak
-  - thetechnick
+set -euo pipefail
 
-reviewers:
-  - kron4eg
-  - moadqassem
-  - moelsayed
-  - xmudrii
-  - xrstf
-  - youssefazrak
-  - thetechnick
+cd $(dirname $0)/../..
+
+git remote add origin git@github.com:kubermatic-labs/boilerplate.git
+export GITHUB_TOKEN=$(cat /etc/github/oauth | tr -d '\n')
+
+goreleaser release

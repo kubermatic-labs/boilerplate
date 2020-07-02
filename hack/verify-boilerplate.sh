@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright 2020 The Kubermatic Kubernetes Platform contributors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# See the OWNERS docs: https://git.k8s.io/community/contributors/guide/owners.md
+set -euo pipefail
 
-approvers:
-  - kron4eg
-  - moadqassem
-  - moelsayed
-  - xmudrii
-  - xrstf
-  - youssefazrak
-  - thetechnick
+cd $(dirname $0)/..
 
-reviewers:
-  - kron4eg
-  - moadqassem
-  - moelsayed
-  - xmudrii
-  - xrstf
-  - youssefazrak
-  - thetechnick
+go build
+./boilerplate -boilerplates hack/boilerplate -verbose .
