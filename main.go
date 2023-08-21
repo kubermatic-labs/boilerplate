@@ -24,11 +24,19 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/sirupsen/logrus"
+)
+
+// These variables get set by ldflags during compilation.
+var (
+	BuildTag    string
+	BuildCommit string
+	BuildDate   string // RFC3339 format ("2006-01-02T15:04:05Z07:00")
 )
 
 // regular expressions
@@ -80,6 +88,7 @@ func (s *stringSlice) Set(value string) error {
 var (
 	boilerplateDir string
 	verbose        bool
+	version        bool
 	excludes       stringSlice = []string{
 		".git",
 		"vendor",
@@ -93,7 +102,18 @@ func main() {
 	flag.StringVar(&boilerplateDir, "boilerplates", "hack/boilerplate/", "Directory containing the boilerplate files for file extensions.")
 	flag.Var(&excludes, "exclude", fmt.Sprintf("glob expressions (relative to cwd) to exclude, can be given multiple times (%v are excluded by default)", excludes))
 	flag.BoolVar(&verbose, "verbose", false, "give verbose output regarding why a file does not pass.")
+	flag.BoolVar(&version, "version", false, "show application version and exit immediately.")
 	flag.Parse()
+
+	if version {
+		commit := "dev"
+		if BuildCommit != "" {
+			commit = BuildCommit[:10]
+		}
+
+		fmt.Printf("boilerplate %s (%s), built with %s on %s\n", BuildTag, commit, runtime.Version(), BuildDate)
+		return
+	}
 
 	log := logrus.New()
 	log.SetFormatter(&logrus.TextFormatter{
