@@ -19,7 +19,7 @@ presubmits:
     clone_uri: "ssh://git@github.com/kubermatic-labs/boilerplate.git"
     spec:
       containers:
-        - image: golang:1.14-alpine
+        - image: golang:1.21-alpine
           command:
             - ./hack/verify-boilerplate.sh
           resources:

@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.17-alpine as builder
+FROM golang:1.21-alpine as builder
 
 WORKDIR /app/
 COPY . .
 RUN go build
 
-FROM alpine:3.13
+FROM alpine:3.17
 
 RUN apk add -U --no-cache make bash
 COPY --from=builder /app/boilerplate /usr/local/bin/

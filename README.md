@@ -11,7 +11,7 @@ Python script.
 ## Installation
 
 ```
-go get github.com/kubermatic-labs/boilerplate
+go install github.com/kubermatic-labs/boilerplate
 ```
 
 ## Usage

@@ -20,7 +20,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -70,7 +69,7 @@ func (s *stringSlice) String() string {
 
 func (s *stringSlice) Set(value string) error {
 	if _, err := filepath.Match(value, "test"); err != nil {
-		return fmt.Errorf("invalid glob pattern: %v", err)
+		return fmt.Errorf("invalid glob pattern: %w", err)
 	}
 
 	*s = append(*s, value)
@@ -169,7 +168,7 @@ func processSource(cwd string, source string, log logrus.FieldLogger, boilerplat
 
 		rel, err := filepath.Rel(cwd, currentPath)
 		if err != nil {
-			return fmt.Errorf("failed to determine relative path of %q: %v", currentPath, err)
+			return fmt.Errorf("failed to determine relative path of %q: %w", currentPath, err)
 		}
 
 		for _, exclude := range excludes {
@@ -203,7 +202,7 @@ func processSource(cwd string, source string, log logrus.FieldLogger, boilerplat
 
 		ok, err := processFile(currentPath, log.WithField("file", rel), boilerplates)
 		if err != nil {
-			return fmt.Errorf("failed to process %q: %v", rel, err)
+			return fmt.Errorf("failed to process %q: %w", rel, err)
 		}
 
 		if !ok {
@@ -217,9 +216,9 @@ func processSource(cwd string, source string, log logrus.FieldLogger, boilerplat
 }
 
 func processFile(filename string, log logrus.FieldLogger, boilerplates map[string]string) (bool, error) {
-	fileContent, err := ioutil.ReadFile(filename)
+	fileContent, err := os.ReadFile(filename)
 	if err != nil {
-		return false, fmt.Errorf("failed to read file: %v", err)
+		return false, fmt.Errorf("failed to read file: %w", err)
 	}
 
 	// determine extension to use to lookup the boilerplate header
@@ -310,7 +309,7 @@ func getBoilerplateForExtensions(sourceDir string) (map[string]string, error) {
 
 	matches, err := filepath.Glob(path.Join(sourceDir, "boilerplate.*.txt"))
 	if err != nil {
-		return nil, fmt.Errorf("finding files via glob: %v", err)
+		return nil, fmt.Errorf("finding files via glob: %w", err)
 	}
 
 	for _, match := range matches {
@@ -319,9 +318,9 @@ func getBoilerplateForExtensions(sourceDir string) (map[string]string, error) {
 			return nil, fmt.Errorf("wrong filename for boilerplate file: %q must be \"boilerplate.EXTENSION.txt\"", match)
 		}
 
-		content, err := ioutil.ReadFile(match)
+		content, err := os.ReadFile(match)
 		if err != nil {
-			return nil, fmt.Errorf("reading file: %v", err)
+			return nil, fmt.Errorf("reading file: %w", err)
 		}
 
 		// map file extension to the boilerplate for the file
